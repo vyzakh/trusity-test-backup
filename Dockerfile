@@ -1,20 +1,23 @@
 FROM node:20-alpine
 WORKDIR /app
 
-# 1. Install System Tools and clean apk cache in one go
+# 1. Install System Tools
 RUN apk add --no-cache \
     chromium nss freetype harfbuzz ca-certificates \
     libreoffice ttf-freefont bash \
     && rm -rf /var/cache/apk/*
 
-# 2. Install Dependencies and clean npm cache immediately
+# 2. Install Dependencies
+# Remove --production for now because we need 'devDependencies' (like nest-cli) to build
 COPY package*.json ./
-RUN npm install --production --no-audit --no-fund \
-    && npm cache clean --force
+RUN npm install
 
-# 3. Copy only the essential code
-# (If you have a 'dist' folder locally, copy that instead of building inside)
+# 3. Copy Code and BUILD
 COPY . .
+RUN npm run build  # <--- THIS IS THE MISSING PIECE
+
+# 4. Optional: Clean up devDependencies to save space
+RUN npm prune --production
 
 # Set environment for Chromium
 ENV CHROME_BIN=/usr/bin/chromium-browser
