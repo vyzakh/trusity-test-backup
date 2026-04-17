@@ -1,33 +1,24 @@
-# Step 1: Build NestJS app with Puppeteer support
-FROM node:22.17-alpine
-
-# Install system dependencies required by Chromium
-RUN apk add --no-cache \
-  chromium \
-  nss \
-  freetype \
-  harfbuzz \
-  ca-certificates \
-  libreoffice \
-  ttf-freefont \
-  bash
-
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
-    PUPPETEER_SKIP_DOWNLOAD=true 
-
-# Set working directory
+FROM node:20-alpine
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install
+# 1. Install System Tools and clean apk cache in one go
+RUN apk add --no-cache \
+    chromium nss freetype harfbuzz ca-certificates \
+    libreoffice ttf-freefont bash \
+    && rm -rf /var/cache/apk/*
 
-# Copy rest of the app
+# 2. Install Dependencies and clean npm cache immediately
+COPY package*.json ./
+RUN npm install --production --no-audit --no-fund \
+    && npm cache clean --force
+
+# 3. Copy only the essential code
+# (If you have a 'dist' folder locally, copy that instead of building inside)
 COPY . .
 
-# Expose app port
+# Set environment for Chromium
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 EXPOSE 3000
-
-RUN npm run build
-
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/main"]
