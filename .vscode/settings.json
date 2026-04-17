@@ -1,0 +1,41 @@
+{
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "prettier.tabWidth": 4,
+  "prettier.printWidth": 12000,
+  "prettier.trailingComma": "all",
+  "prettier.singleQuote": true,
+  "files.eol": "\r\n",
+  "files.associations": {
+    "*.ts": "typescript"
+  },
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.removeUnusedImports": "always"
+  },
+  "explorer.compactFolders": false,
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[handlebars]": {
+    "editor.formatOnSave": false
+  },
+  "[html]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.fontFamily": "Ubuntu Mono",
+  "formatSelectionAsHtml.formatter": "prettier",
+  "editor.fontSize": 13,
+  "git-blame.configs.statusBar.length": "short",
+  "liveServer.settings.port": 3001
+}

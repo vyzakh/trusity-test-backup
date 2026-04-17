@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Challenge Feedback Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333333;
+        background-color: #f7f7f7;
+        padding: 20px;
+      }
+      .container {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p>Hi {{StudentName}},</p>
+
+      <p>
+        Your teacher has shared feedback on your challenge 
+        <strong>“{{ChallengeName}}”</strong>.
+      </p>
+
+      <p>
+        Take a look at the suggestions and insights provided — this is a great 
+        opportunity to improve your ideas and make your challenge even better! 💡
+      </p>
+
+      <p>
+        If you have any questions or concerns, please reach out to your 
+        <strong>School Admin</strong>.
+      </p>
+
+      <p>Best Regards,<br/>TruPreneurs.AI</p>
+    </div>
+
+    {{!-- <div class="footer">
+      &copy; {{year}} Trusity. All rights reserved.
+    </div> --}}
+  </body>
+</html>

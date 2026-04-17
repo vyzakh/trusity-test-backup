@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Permission Update Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333333;
+        background-color: #f7f7f7;
+        padding: 20px;
+      }
+      .container {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p>Hello {{adminName}},</p>
+
+      <p>
+        The Super Admin has updated your permissions on <strong>TruPreneurs.AI</strong>.<br/>
+        You can view your latest permissions in your <strong>Profile Section</strong>.
+      </p>
+
+      <p>
+        If you have any questions, please reach out to <strong>TruPreneurs.AI</strong>.
+      </p>
+
+      <p>Best Regards,<br/>TruPreneurs.AI</p>
+    </div>
+
+    <div class="footer">
+      &copy; {{year}} TruPreneurs.AI. All rights reserved.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1685 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type BaseResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type ChallengeSector {
+  id: Int!
+  name: String!
+  description: String
+}
+
+type City {
+  id: Int!
+  name: String!
+}
+
+type Country {
+  id: String!
+  name: String!
+  emoji: String
+}
+
+type Currency {
+  id: Int!
+  name: String!
+  code: String!
+}
+
+type Curriculum {
+  id: Int!
+  name: String!
+  allowCustom: Boolean!
+}
+
+type Grade {
+  id: Int!
+  name: String!
+}
+
+type Permission {
+  id: Int!
+  name: String!
+  code: String!
+  description: String
+  requiredPermissions: [Int!]!
+}
+
+type PlatformUser {
+  id: String!
+  userAccountId: String!
+  name: String!
+  email: String!
+  scope: UserScope!
+  canDelete: Boolean!
+  role: PlatformUserRole!
+  permissions: [Permission!]!
+}
+
+enum UserScope {
+  PLATFORM_ADMIN
+  PLATFORM_USER
+  SCHOOL_ADMIN
+  TEACHER
+  B2B_STUDENT
+  B2C_STUDENT
+  STUDENT
+}
+
+enum PlatformUserRole {
+  SUPERADMIN
+  USER
+}
+
+type Resource {
+  id: Int!
+  name: String!
+  description: String
+  permissions: [Permission!]!
+}
+
+type Sdg {
+  id: Int!
+  title: String!
+  description: String
+}
+
+type Section {
+  id: Int!
+  name: String!
+}
+
+type State {
+  id: Int!
+  name: String!
+}
+
+type SchoolAdmin {
+  id: String!
+  userAccountId: String!
+  name: String!
+  email: String!
+  contactNumber: String
+  scope: UserScope!
+  isPrimary: Boolean!
+  schoolId: String!
+}
+
+type StudentBusinessStats {
+  total: Int!
+  completed: Int!
+  inProgress: Int!
+}
+
+type StudentChallengeStats {
+  assigned: Int!
+  completed: Int!
+  inProgress: Int!
+}
+
+type StudentGuardian {
+  name: String
+  email: String
+  contactNumber: String
+}
+
+type Student {
+  id: String!
+  name: String!
+  email: String!
+  scope: UserScope!
+  contactNumber: String
+  userAccountId: String!
+  dateOfBirth: DateTime
+  accountType: BusinessModelEnum!
+  guardian: StudentGuardian
+  grade: StudentGrade
+  section: StudentSection
+  school: School
+  businessStats: StudentBusinessStats!
+  challengeStats: StudentChallengeStats!
+  totalAvgScore: Float!
+  challenges: [Challenge!]
+  businesses(offset: Int, limit: Int, schoolId: String, studentId: String, businessName: String, status: BusinessStatus, source: BusinessSource): [Business!]!
+  totalBusinesses(schoolId: String, studentId: String, businessName: String, status: BusinessStatus): Int!
+  assignedChallenges(offset: Int, limit: Int): [AssignedChallenge!]!
+  totalAssignedChallenges: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum BusinessModelEnum {
+  B2B
+  B2C
+}
+
+union StudentGrade = B2CStudentGrade | B2BStudentGrade
+
+type B2CStudentGrade {
+  text: String!
+}
+
+type B2BStudentGrade {
+  id: String!
+  grade: Grade
+}
+
+union StudentSection = B2CStudentSection | B2BStudentSection
+
+type B2CStudentSection {
+  text: String!
+}
+
+type B2BStudentSection {
+  id: String!
+  section: Section
+}
+
+enum BusinessStatus {
+  COMPLETED
+  IN_PROGRESS
+}
+
+enum BusinessSource {
+  CHALLENGE
+  DIRECT
+}
+
+type CreateStudentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  student: Student!
+}
+
+type UpdateStudentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  student: Student
+}
+
+type DeleteStudentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type StudentPitchScripts {
+  id: String!
+  narrative: String
+  pitchDescription: String
+  aiGeneratedScript: String!
+}
+
+type StudentPitchScriptsResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  StudentPitchScripts: StudentPitchScripts!
+}
+
+type StudentPitchPracticeAndFeedback {
+  id: String!
+  pitchPracticeVideoUrl: String
+  pitchAiGeneratedFeedback: String!
+  score: String!
+}
+
+type StudentPitchPracticeAndFeedbackResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  StudentPitchScripts: StudentPitchPracticeAndFeedback!
+}
+
+type SaveStudentPitchPracticeAndFeedback {
+  id: String!
+  pitchPracticeVideoUrl: String
+  pitchAiGeneratedFeedback: String!
+  score: String!
+}
+
+type PitchDeckPDF {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  pitchDeckPDF: String!
+}
+
+type PitchDeckPPTX {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  base64: String!
+}
+
+type Teacher {
+  id: String!
+  name: String!
+  email: String!
+  scope: UserScope!
+  contactNumber: String!
+  schoolGrades: [TeacherGrade!]!
+  school: School
+}
+
+type TeacherGrade {
+  id: String!
+  grade: Grade
+  schoolSections: [TeacherSection!]!
+}
+
+type TeacherSection {
+  id: String!
+  section: Section
+}
+
+type CreateTeacherResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  teacher: Teacher
+}
+
+type UpdateTeacherResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  teacher: Teacher
+}
+
+type DeleteTeacherResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  teacher: Teacher
+}
+
+type LoginResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  user: LoggedInUserUnion
+  sessionId: String
+}
+
+union LoggedInUserUnion = PlatformUser | SchoolAdmin | Teacher | Student
+
+type BrandFont {
+  url: String!
+  name: String!
+}
+
+type Branding {
+  brandVoice: String
+  primaryColor: String
+  secondaryColor: String
+  tertiaryColor: String
+  selectedFont: BrandFont
+}
+
+type GenerateBrandingResponse {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  suggestedFonts: [BrandFont!]!
+}
+
+type CapexItem {
+  name: String!
+  cost: Float!
+}
+
+type MonthlyData {
+  y1: Float
+  y2: Float
+  y3: Float
+  y4: Float
+  y5: Float
+}
+
+type FinancialData {
+  M1: MonthlyData
+  M2: MonthlyData
+  M3: MonthlyData
+  M4: MonthlyData
+  M5: MonthlyData
+  M6: MonthlyData
+  M7: MonthlyData
+  M8: MonthlyData
+  M9: MonthlyData
+  M10: MonthlyData
+  M11: MonthlyData
+  M12: MonthlyData
+}
+
+type OpexExpense {
+  y0: Float
+  y1: Float
+  y2: Float
+  y3: Float
+  y4: Float
+  y5: Float
+}
+
+type MonthlyOpex {
+  y1: Float
+  y2: Float
+  y3: Float
+  y4: Float
+  y5: Float
+}
+
+type OpexData {
+  M1: MonthlyOpex
+  M2: MonthlyOpex
+  M3: MonthlyOpex
+  M4: MonthlyOpex
+  M5: MonthlyOpex
+  M6: MonthlyOpex
+  M7: MonthlyOpex
+  M8: MonthlyOpex
+  M9: MonthlyOpex
+  M10: MonthlyOpex
+  M11: MonthlyOpex
+  M12: MonthlyOpex
+}
+
+type Opex {
+  opex: OpexData
+  opexExpense: OpexExpense
+}
+
+type BusinessRevenueModel {
+  currencyId: Int!
+  currencyCode: String!
+  revenueModel: String!
+  unitSalesPercentage: Float!
+}
+
+type BusinessMarketQuestionnaire {
+  slNo: Int!
+  question: String!
+  yesCount: Int!
+  noCount: Int!
+  yesPercentage: Float!
+  noPercentage: Float!
+}
+
+type BusinessPrototypeOption {
+  id: Int!
+  name: String!
+}
+
+type BusinessProgressScore {
+  problemStatement: Float
+  marketResearch: Float
+  marketFit: Float
+  prototype: Float
+  financialPlanning: Float
+  marketing: Float
+  businessModel: Float
+}
+
+type BusinessProgressStatus {
+  problemStatement: Boolean!
+  marketResearch: Boolean!
+  marketFit: Boolean!
+  prototype: Boolean!
+  businessModel: Boolean!
+  revenueModel: Boolean!
+  capex: Boolean!
+  opex: Boolean!
+  financialPlanning: Boolean!
+  branding: Boolean!
+  marketing: Boolean!
+}
+
+type BusinessPhaseStatuses {
+  innovationCompleted: Boolean!
+  entrepreneurshipCompleted: Boolean!
+  communicationCompleted: Boolean!
+}
+
+type BusinessModel {
+  keyPartners: String!
+  customerSegments: String!
+  valuePropositions: String!
+  channels: String!
+  customerRelationships: String!
+  revenueStreams: String!
+  keyResources: String!
+  keyActivities: String!
+  costStructure: String!
+  targetMarketSize: String!
+  goalsAndKPIs: String!
+}
+
+type InvestmentFundSource {
+  source: String!
+}
+
+type InvestmentNextStep {
+  actionItem: String!
+  step: String!
+  due: String!
+}
+
+type InvestmentFundPitchStatement {
+  pitchStatement: String!
+}
+
+type InvestmentValueEdge {
+  fundCase: String!
+}
+
+type InvestmentFundGoal {
+  goal: String!
+  cost: String!
+  outcome: String!
+}
+
+type InvestmentFundPlan {
+  amount: String!
+  description: String!
+  importance: String!
+}
+
+type CreateInvestmentResult {
+  businessId: String!
+  amount: String!
+  purpose: String!
+  valueEdge: InvestmentValueEdge!
+  fundGoals: [InvestmentFundGoal!]!
+  fundPlan: [InvestmentFundPlan!]!
+  fundSource: InvestmentFundSource!
+  nextStep: [InvestmentNextStep!]!
+  fundPitchStatement: InvestmentFundPitchStatement!
+}
+
+type BusinessAverageScores {
+  avgIScore: Float
+  avgEScore: Float
+  avgCScore: Float
+}
+
+type Business {
+  id: String!
+  source: BusinessSource!
+  businessName: String!
+  idea: String!
+  problemStatement: String
+  problemStatementFeedback: String
+  targetMarket: String
+  marketResearch: String
+  marketResearchData: String
+  marketCompetitors: String
+  marketSummary: String
+  marketQuestionnaire: [BusinessMarketQuestionnaire!]
+  marketFit: String
+  marketFitFeedback: String
+  isIdeaReviewed: Boolean!
+  prototypeOption: BusinessPrototypeOption
+  prototypeDescription: String
+  prototypeImages: [String!]
+  businessModel: BusinessModel
+  revenueModel: BusinessRevenueModel
+  capex: [CapexItem!]
+  capexTotal: Float
+  opex: [Opex!]
+  sales: [FinancialData!]
+  breakeven: [FinancialData!]
+  breakevenPoint: String
+  financialPlanDescription: String
+  risksAndMitigations: String
+  futurePlans: String
+  branding: Branding
+  customerExperience: String
+  marketing: String
+  competitorAnalysis: String
+  businessModelExport: String!
+  marketingFeedback: String
+  launchRecommendation: String!
+  launchStrategy: String!
+  investment: CreateInvestmentResult!
+  status: BusinessStatus!
+  isCompleted: Boolean
+  callToAction: String
+  pitchDescription: String
+  pitchAiGeneratedScript: String
+  pitchNarrative: String
+  pitchPracticeVideoUrl: String
+  pitchAiGeneratedFeedback: String
+  createdAt: String!
+  updatedAt: String!
+  sdgs: [Sdg!]
+  challenge: Challenge
+  progressScore: BusinessProgressScore
+  progressStatus: BusinessProgressStatus
+  phaseStatuses: BusinessPhaseStatuses!
+  availablePrototypeOptions: [PrototypeOption!]!
+  nextStep: BusinessNextStep
+  progressPercentage: Int
+  averageScores: BusinessAverageScores
+  marketResearchQuestionnaireDownload: String
+}
+
+type BusinessIdea {
+  id: Int!
+  idea: String!
+}
+
+type BusinessNextStep {
+  phase: String!
+  step: String!
+}
+
+type DeleteBusinessResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type ExportBusinessModelResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  file: String
+}
+
+type MetadataResult {
+  x_axis: String!
+  y_axis: String!
+}
+
+type ProblemStatement {
+  id: Int!
+  statement: String!
+  feedback: [String!]!
+  metadata: MetadataResult!
+  score: Float!
+}
+
+type ProblemStatementFeedback {
+  tips: String!
+}
+
+type BusinessResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  business: Business
+}
+
+type GenerateMarketResearchScoreResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type BusinessLearningPhase {
+  id: Int!
+  name: String!
+  sortOrder: Int!
+  businessLearningSteps: [BusinessLearningStep!]!
+}
+
+type BusinessLearningStep {
+  id: Int!
+  name: String!
+  sortOrder: Int!
+  businessLearningContents: [BusinessLearningContent!]!
+}
+
+type BusinessLearningContent {
+  id: Int!
+  businessLearningStepId: Int!
+  fileUrl: String
+  mimeType: String
+  sortOrder: Int!
+}
+
+type CreateBusinessLearningContentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  businessLearningContent: BusinessLearningContent!
+}
+
+type DeleteBusinessLearningContentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type BusinessPhaseAverageScore {
+  avgInnovationScore: Float!
+  avgEntrepreneurshipScore: Float!
+  avgCommunicationScore: Float!
+}
+
+type SchoolStats {
+  totalStudents: Int!
+  totalTeachers: Int!
+}
+
+type SchoolAddress {
+  streetAddressLine1: String
+  streetAddressLine2: String
+  postalCode: String
+  contactNumber: String
+  country: Country
+  state: State
+  city: City
+}
+
+type SchoolContact {
+  name: String
+  contactNumber: String
+  email: String
+}
+
+type SchoolLicense {
+  totalLicense: Int!
+  usedLicense: Int!
+}
+
+type SchoolCarriculum {
+  id: Int!
+  name: String!
+  allowCustom: Boolean!
+  otherName: String
+}
+
+type SchoolGrade {
+  id: String!
+  schoolSections: [SchoolSection!]!
+  grade: Grade
+  totalUniqueBusinesses: Int!
+}
+
+type SchoolSection {
+  id: String!
+  section: Section
+}
+
+type School {
+  id: String!
+  name: String!
+  accountType: BusinessModelEnum!
+  address: SchoolAddress
+  contact: SchoolContact
+  license: SchoolLicense
+  logoUrl: String
+  isActive: Boolean
+  createdAt: DateTime!
+  curriculums: [SchoolCarriculum!]!
+  schoolGrades: [SchoolGrade!]!
+  stats: SchoolStats!
+  businessPhaseAvgScores: BusinessPhaseAverageScore!
+}
+
+type CreateSchoolResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  school: School
+}
+
+type UpdateSchoolResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  school: School
+}
+
+type CreateSchoolGradeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type UpdateSchoolGradeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type DeleteSchoolGradeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type ToggleSchoolActivationResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type Challenge {
+  id: String!
+  title: String!
+  companyName: String
+  description: String
+  expectation: String
+  scope: ChallengeScope!
+  creatorType: ChallengeCreatorType!
+  logoUrl: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sdgs: [Sdg!]!
+  sector: ChallengeSector
+  createdBy: ChallengeCreatedByUnion
+  school: School
+  assignments(
+    schoolId: String
+    schoolGradeId: String
+    schoolSectionId: String
+    name: String
+    offset: Int
+    limit: Int
+    participation: ChallengeParticipationEnum
+  ): [ChallengeAssignment!]
+  totalAssignments(schoolId: String, schoolGradeId: String, schoolSectionId: String, name: String, participation: ChallengeParticipationEnum): Int!
+  assignedSchools: [School!]!
+  assignedSchoolGrades(schoolId: String): [SchoolGrade!]!
+  assignedSchoolSections(schoolId: String, schoolGradeId: String!): [SchoolSection!]!
+  studentStats: ChallengeStudentStats!
+  assignationInfo: ChallengeAssignationInfo
+  isHidden: Boolean!
+  participants(schoolId: String, schoolGradeId: String, schoolSectionId: String, name: String, offset: Int, limit: Int, participation: ChallengeParticipationEnum): [Student!]!
+  totalParticipants(schoolId: String, schoolGradeId: String, schoolSectionId: String, name: String, participation: ChallengeParticipationEnum): Int!
+}
+
+enum ChallengeScope {
+  TRUSITY
+  SCHOOL
+}
+
+enum ChallengeCreatorType {
+  PLATFORM_USER
+  SCHOOL_ADMIN
+  TEACHER
+}
+
+union ChallengeCreatedByUnion = PlatformUser | SchoolAdmin | Teacher
+
+enum ChallengeParticipationEnum {
+  ASSIGNED
+  PARTICIPATED
+  COMPLETED
+}
+
+type AssignedChallenge {
+  challenge: Challenge!
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+type ChallengeAssignationInfo {
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+type ChallengeAssignment {
+  student: Student!
+  startAt: DateTime!
+  endAt: DateTime!
+}
+
+type CreateChallengeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  challenge: Challenge!
+}
+
+type AssignChallengeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type ChallengeAssignedSchool {
+  school: School!
+}
+
+type ChallengeStudentStats {
+  totalAssigned: Int!
+  completed: Int!
+  inProgress: Int!
+}
+
+type CreateBusinessResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  business: Business!
+}
+
+type GeneratePrototypeSuggestionsResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  prototypeImages: [String!]
+}
+
+type PrototypeOption {
+  id: Int!
+  name: String!
+}
+
+type ExportMarketResearchQuestionnaireResult {
+  file: String!
+}
+
+type GenerateMarketPlanResponse {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  score: Float
+  feedback: String
+}
+
+type UpdateChallengeAssignmentResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type UpdateChallengeResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  challenge: Challenge
+}
+
+type UploadFileData {
+  uploadUrl: String!
+  fileUrl: String!
+  fileKey: String!
+  expiresIn: Int!
+}
+
+type UploadFileResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  file: UploadFileData
+}
+
+type CreatePlatformUserResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  platformUser: PlatformUser!
+}
+
+type AssignPermissionsToPlatformUserResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type DeletePlatformUserResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type UpdatePlatformUserResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  platformUser: PlatformUser
+}
+
+type CreateSchoolAdminResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  schoolAdmin: SchoolAdmin!
+}
+
+type DeleteSchoolAdminResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+}
+
+type UpdateSchoolAdminResult {
+  success: Boolean!
+  message: String!
+  statusCode: Int!
+  schoolAdmin: SchoolAdmin!
+}
+
+type Query {
+  challengeSectors: [ChallengeSector!]!
+  countries: [Country!]!
+  states(countryId: String!): [State!]!
+  cities(stateId: String!): [City!]!
+  sections: [Section!]!
+  curriculums: [Curriculum!]!
+  grades: [Grade!]!
+  sdgs: [Sdg!]!
+  currencies: [Currency!]!
+  resources: [Resource!]!
+  totalActiveStudents: Int!
+  totalCompletedIdeas: Int!
+  totalUniqueIdeas: Int!
+  totalInprogressIdeas: Int!
+  totalActiveSchools: Int!
+  averageBusinessScores: BusinessAverageScores!
+  schools(offset: Int, limit: Int, accountType: BusinessModelEnum, status: SchoolStatus, name: String, sortBy: [SchoolSortBy!]): [School!]!
+  school(schoolId: String!): School
+  totalSchools(accountType: BusinessModelEnum, name: String, status: SchoolStatus): Int!
+  schoolGrades(schoolId: String): [SchoolGrade!]!
+  schoolAdmins(offset: Int, limit: Int, name: String, schoolId: String): [SchoolAdmin!]
+  totalSchoolAdmins(name: String, schoolId: String): Int!
+  schoolAdmin(schoolAdminId: String!): SchoolAdmin
+  student(studentId: String!): Student
+  students(offset: Int, limit: Int, name: String, schoolId: String, accountType: BusinessModelEnum, schoolGradeId: String, schoolSectionId: String, teacherId: String): [Student!]!
+  totalStudents(name: String, schoolId: String, accountType: BusinessModelEnum, schoolGradeId: String, schoolSectionId: String, teacherId: String): Int!
+  exportPitchDeckPdf(businessId: String!, callToAction: String!): PitchDeckPDF!
+  generatePitchDeckPptx: PitchDeckPPTX!
+  listGeneratedPitchDeckPptx: PitchDeckPPTX!
+  listPitchDeckTemplates: PitchDeckPPTX!
+  teachers(offset: Int, limit: Int, name: String, schoolId: String): [Teacher!]!
+  teacher(teacherId: String!): Teacher
+  totalTeachers(name: String, schoolId: String): Int!
+  challenges(offset: Int, limit: Int, creatorType: ChallengeCreatorType, title: String, scope: ChallengeScope, schoolId: String): [Challenge!]!
+  challenge(challengeId: String!): Challenge
+  totalChallenges(creatorType: ChallengeCreatorType, title: String, scope: ChallengeScope, schoolId: String): Int!
+  challengeAssignment(schoolId: String, challengeId: String!): ChallengeAssignedSchool
+  whoami: LoginResult!
+  businessLearningPhases: [BusinessLearningPhase!]!
+  businessLearningContents(phaseCode: String!, stepCode: String!): [BusinessLearningContent!]!
+  businessIdeas(input: BusinessIdeasInput!): [BusinessIdea!]!
+  businesses(offset: Int, limit: Int, schoolId: String, studentId: String, businessName: String, status: BusinessStatus, source: BusinessSource): [Business!]!
+  totalBusinesses(schoolId: String, studentId: String, businessName: String, status: BusinessStatus): Int!
+  business(businessId: String!): Business
+  exportBusinessModel(businessId: String!): BusinessResult!
+  generateLaunchRecommendation(businessId: String!): BusinessResult!
+  platformUsers(offset: Int, limit: Int, name: String): [PlatformUser!]!
+  totalPlatformUsers(name: String): Int!
+  platformUser(platformUserId: String!): PlatformUser
+}
+
+enum SchoolStatus {
+  ACTIVE
+  INACTIVE
+}
+
+input SchoolSortBy {
+  column: SchoolSortColumn!
+  order: SortOrder!
+}
+
+enum SchoolSortColumn {
+  NAME
+  CREATED_AT
+  UPDATED_AT
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+input BusinessIdeasInput {
+  keywords: String!
+  sdgIds: [Int!]!
+}
+
+type Mutation {
+  createSchool(input: CreateSchoolInput!): CreateSchoolResult!
+  updateSchool(schoolId: String!, input: UpdateSchoolInput!): UpdateSchoolResult!
+  createSchoolGrade(schoolId: String, input: CreateSchoolGradeInput!): CreateSchoolGradeResult!
+  deleteSchoolGrade(schoolGradeId: String!): DeleteSchoolGradeResult!
+  updateSchoolGrade(schoolGradeId: String!, input: UpdateSchoolGradeInput!): UpdateSchoolGradeResult!
+  toggleSchoolActivation(schoolId: String!, action: SchoolStatusAction!): ToggleSchoolActivationResult!
+  createSchoolAdmin(schoolId: String, name: String!, email: String!, contactNumber: String): CreateSchoolAdminResult!
+  updateSchoolAdmin(input: UpdateSchoolAdminInput!): UpdateSchoolAdminResult!
+  deleteSchoolAdmin(schoolAdminId: String!): DeleteSchoolAdminResult!
+  uploadFile(input: UploadFileInput!): UploadFileResult!
+  createStudent(input: CreateStudentInput!): CreateStudentResult!
+  updateStudent(input: UpdateStudentInput!): UpdateStudentResult!
+  deleteStudent(studentId: String!): DeleteStudentResult!
+  createPitchScriptDetails(businessId: String!, narrative: String, pitchDescription: String): StudentPitchScriptsResult!
+  savePitchScriptDetails(businessId: String!, narrative: String!, pitchDescription: String!, aiGeneratedScript: String!): StudentPitchScriptsResult!
+  createPitchPracticeAndFeedback(businessId: String!, videoUrl: String!): StudentPitchPracticeAndFeedbackResult!
+  savePitchFeedbackDetails(businessId: String!, videoUrl: String!, aiGeneratedFeedback: String!, score: Float!): StudentPitchPracticeAndFeedbackResult!
+  generatePitchDeck(data: PitchDeckInputType!, templateId: Float!): PitchDeckPPTX!
+  generatePitchDeckPptxTemplate(data: PitchDeckInputType!, templateId: Float!): PitchDeckPPTX!
+  generatePitchDeckPptxTemplates(data: PitchDeckInputType!, templateId: Float!): PitchDeckPPTX!
+  createTeacher(schoolId: String, input: CreateTeacherInput!): CreateTeacherResult!
+  updateTeacher(teacherId: String!, input: UpdateTeacherInput!): UpdateTeacherResult!
+  deleteTeacher(teacherId: String!): DeleteTeacherResult!
+  createChallenge(input: CreateChallengeInput!): CreateChallengeResult!
+  updateChallenge(
+    challengeId: String!
+    title: String
+    companyName: String
+    description: String
+    sectorId: Int
+    expectation: String
+    sdgIds: [Int!]
+    logoUrl: String
+  ): UpdateChallengeResult!
+  assignChallenge(input: AssignChallengeInput!): AssignChallengeResult!
+  updateChallengeAssignment(challengeId: String!, schoolId: String!, isEntire: Boolean!, gradeIds: [String!]): UpdateChallengeAssignmentResult!
+  unassignChallenge(input: UnAssignChallengeInput!): AssignChallengeResult!
+  deleteChallenge(challengeId: String!): BaseResult!
+  hideChallenge(input: HideChallengeInput!): BaseResult!
+  login(email: String!, password: String!): LoginResult!
+  logout: BaseResult!
+  sendPasswordResetLink(input: SendPasswordResetLinkInput!): BaseResult!
+  resetPasswordWithToken(input: ResetPasswordWithTokenInput!): BaseResult!
+  createBusinessLearningContent(input: CreateBusinessLearningContentInput!): CreateBusinessLearningContentResult!
+  deleteBusinessLearningContent(businessLearningContentId: Int!): DeleteBusinessLearningContentResult!
+  updatedBusinessLearningContentOrders(input: [UpdateBusinessLearningContentOrdersInput!]!): BaseResult!
+  createBusiness(input: CreateBusinessInput!): CreateBusinessResult!
+  updateBusiness(input: UpdateBusinessInput!): BusinessResult!
+  generateProblemStatementFeedback(input: GenerateProblemStatementFeedbackInput!): BusinessResult!
+  generateMarketResearchData(input: GenerateMarketResearchDataInput!): BusinessResult!
+  generateMarketResearchQuestions(input: GenerateMarketResearchQuestionsInput!): BusinessResult!
+  saveMarketResearch(input: GenerateMarketResearchScoreInput!): GenerateMarketResearchScoreResult!
+  deleteBusiness(businessId: String!): DeleteBusinessResult!
+  exportBusinessModel(businessId: String!): ExportBusinessModelResult!
+  generateMarketFitFeedback(input: GenerateMarketFitFeedbackInput!): BusinessResult!
+  saveMarketFit(input: SaveMarketFitInput!): BusinessResult!
+  generatePrototypeSuggestions(input: GeneratePrototypeSuggestionsInput!): GeneratePrototypeSuggestionsResult!
+  savePrototype(input: SavePrototypeInput!): BusinessResult!
+  saveBusinessModel(input: SaveBusinessModelInput!): BusinessResult!
+  createRevenueModel(input: CreateRevenueModelInput!): BusinessResult!
+  createCapex(input: CreateCapexInput!): BusinessResult!
+  createOpex(input: CreateOpexInput!): BusinessResult!
+  createFinancialPlanning(input: CreateFinancialPlanningInput!): BusinessResult!
+  generateBranding(input: GenerateBrandingInput!): GenerateBrandingResponse!
+  saveBranding(input: SaveBrandingInput!): BusinessResult!
+  generateMarketPlan(input: GenerateMarketPlanInput!): GenerateMarketPlanResponse!
+  saveMarketPlan(input: SaveMarketPlanInput!): BusinessResult!
+  createBusinessFeeback: BusinessResult!
+  exportMarketResearchQuestionnaire(input: ExportMarketResearchQuestionnaireInput!): ExportMarketResearchQuestionnaireResult!
+  createInvestment(input: CreateInvestmentInput!): BusinessResult!
+  saveLaunch(input: SaveLaunchInput!): BusinessResult!
+  createPlatformUser(input: CreatePlatformUserInput!): CreatePlatformUserResult!
+  assignPermissionsToPlatformUser(input: AssignPermissionsToPlatformUserInput!): AssignPermissionsToPlatformUserResult!
+  deletePlatformUser(input: DeletePlatformUserInput!): DeletePlatformUserResult!
+  updatePlatformUser(input: UpdatePlatformUserInput!): UpdatePlatformUserResult!
+}
+
+input CreateSchoolInput {
+  name: String!
+  accountType: BusinessModelEnum!
+  curriculums: [CreateSchoolCurriculumInput!]
+  totalLicense: Int
+  address: CreateSchoolAddressInput
+  contact: CreateSchoolContactInput
+  logoUrl: String
+}
+
+input CreateSchoolCurriculumInput {
+  id: Int!
+  name: String
+}
+
+input CreateSchoolAddressInput {
+  countryId: String
+  stateId: String
+  cityId: String
+  streetAddressLine1: String
+  streetAddressLine2: String
+  postalCode: String
+  contactNumber: String
+}
+
+input CreateSchoolContactInput {
+  name: String
+  contactNumber: String
+  email: String
+}
+
+input UpdateSchoolInput {
+  name: String
+  accountType: BusinessModelEnum!
+  curriculums: [UpdateSchoolCurriculumInput!]
+  totalLicense: Int
+  address: UpdateSchoolAddressInput
+  contact: UpdateSchoolContactInput
+  logoUrl: String
+}
+
+input UpdateSchoolCurriculumInput {
+  id: Int!
+  name: String
+}
+
+input UpdateSchoolAddressInput {
+  countryId: String
+  stateId: String
+  cityId: String
+  streetAddressLine1: String
+  streetAddressLine2: String
+  postalCode: String
+  contactNumber: String
+}
+
+input UpdateSchoolContactInput {
+  name: String
+  contactNumber: String
+  email: String
+}
+
+input CreateSchoolGradeInput {
+  gradeId: Int!
+  sectionIds: [Int!]!
+}
+
+input UpdateSchoolGradeInput {
+  gradeId: Int!
+  sectionIds: [Int!]!
+}
+
+enum SchoolStatusAction {
+  ACTIVATE
+  DEACTIVATE
+}
+
+input UpdateSchoolAdminInput {
+  schoolAdminId: String!
+  name: String
+  email: String
+  contactNumber: String
+}
+
+input UploadFileInput {
+  fileName: String!
+  fileType: FileType!
+  mimeType: String!
+}
+
+enum FileType {
+  CHALLENGE_LOGO
+  SCHOOL_LOGO
+  BUSINESS_LEARNING_FILE
+  PITCH_FEEDBACK_FILE
+  BUSINESS_MODEL_PDF
+}
+
+input CreateStudentInput {
+  accountType: BusinessModelEnum!
+  schoolId: String
+  name: String!
+  email: String!
+  contactNumber: String
+  dateOfBirth: String
+  guardian: CreateStudentGuardianInput
+  schoolGradeId: String
+  schoolSectionId: String
+  grade: String
+  section: String
+}
+
+input CreateStudentGuardianInput {
+  name: String
+  email: String
+  contactNumber: String
+}
+
+input UpdateStudentInput {
+  studentId: String!
+  accountType: BusinessModelEnum!
+  schoolId: String
+  name: String
+  email: String
+  contactNumber: String
+  dateOfBirth: String
+  guardian: UpdateStudentGuardianInput
+  schoolGradeId: String
+  schoolSectionId: String
+  grade: String
+  section: String
+}
+
+input UpdateStudentGuardianInput {
+  name: String
+  email: String
+  contactNumber: String
+}
+
+input PitchDeckInputType {
+  businessName: String!
+  idea: String
+  problemStatement: String
+  pitchDescription: String
+  targetMarket: String
+  marketResearch: String
+  marketFit: String
+  prototypeDescription: String
+  businessModel: BusinessModelInputType
+  revenueModel: RevenueModelInputType
+  capex: [CapexItemInputType!]
+  capexTotal: String
+  opex: [OpexWrapperInputType!]
+  sales: [SalesInputType!]
+  breakeven: [BreakevenInputType!]
+  breakevenPoint: String
+  financialPlanDescription: String
+  risksAndMitigations: String
+  futurePlans: String
+  branding: String
+  customerExperience: String
+  marketing: String
+}
+
+input BusinessModelInputType {
+  valuePropositions: String
+  customerSegments: String
+  revenueStreams: String
+  keyResources: String
+  keyActivities: String
+  keyPartners: String
+}
+
+input RevenueModelInputType {
+  revenueModel: String
+  currencyCode: String
+}
+
+input CapexItemInputType {
+  cost: Float!
+  name: String!
+}
+
+input OpexWrapperInputType {
+  opex: OpexInputType!
+}
+
+input OpexInputType {
+  M1: YearlyCostInputType!
+  M2: YearlyCostInputType!
+}
+
+input YearlyCostInputType {
+  y1: Float!
+  y2: Float!
+  y3: Float!
+  y4: Float!
+  y5: Float!
+}
+
+input SalesInputType {
+  M1: YearlyCostInputType!
+  M2: YearlyCostInputType!
+}
+
+input BreakevenInputType {
+  M1: YearlyCostInputType!
+  M2: YearlyCostInputType!
+}
+
+input CreateTeacherInput {
+  name: String!
+  email: String!
+  contactNumber: String!
+  schoolSectionIds: [String!]!
+}
+
+input UpdateTeacherInput {
+  name: String
+  email: String
+  contactNumber: String
+  schoolSectionIds: [String!]!
+}
+
+input CreateChallengeInput {
+  title: String!
+  companyName: String!
+  sectorId: Int!
+  description: String!
+  expectation: String!
+  sdgIds: [Int!]!
+  logoUrl: String
+}
+
+input AssignChallengeInput {
+  challengeId: String!
+  startAt: String!
+  endAt: String!
+  schoolId: String
+  schoolGradeId: String
+  studentIds: [String!]
+}
+
+input UnAssignChallengeInput {
+  challengeId: String!
+  schoolId: String
+  schoolGradeId: String
+  schoolSectionIds: [String!]
+  studentIds: [String!]
+}
+
+input HideChallengeInput {
+  challengeId: String!
+  hidden: Boolean!
+}
+
+input SendPasswordResetLinkInput {
+  email: String!
+}
+
+input ResetPasswordWithTokenInput {
+  token: String!
+  password: String!
+}
+
+input CreateBusinessLearningContentInput {
+  businessLearningStepId: Int!
+  fileKey: String!
+  sortOrder: Int
+}
+
+input UpdateBusinessLearningContentOrdersInput {
+  businessLearningContentId: Int!
+  sortOrder: Int!
+}
+
+input CreateBusinessInput {
+  source: BusinessSource!
+  businessName: String!
+  idea: String!
+  challengeId: String
+  sdgIds: [Int!]
+}
+
+input UpdateBusinessInput {
+  businessId: String!
+  businessName: String
+  idea: String
+  sdgIds: [Int!]
+}
+
+input GenerateProblemStatementFeedbackInput {
+  businessId: String!
+  problemStatement: String!
+}
+
+input GenerateMarketResearchDataInput {
+  businessId: String!
+  targetMarket: String!
+  marketResearch: String!
+}
+
+input GenerateMarketResearchQuestionsInput {
+  businessId: String!
+  targetMarket: String!
+  marketResearch: String!
+}
+
+input GenerateMarketResearchScoreInput {
+  businessId: String!
+  marketResearch: String!
+  marketResearchData: String!
+  targetMarket: String!
+  competitors: String!
+  questions: [MarketResearchQuestion!]!
+  summary: String!
+}
+
+input MarketResearchQuestion {
+  slNo: Int!
+  question: String!
+  yesCount: Int!
+  noCount: Int!
+  yesPercentage: Float!
+  noPercentage: Float!
+}
+
+input GenerateMarketFitFeedbackInput {
+  businessId: String!
+  marketFit: String!
+}
+
+input SaveMarketFitInput {
+  businessId: String!
+  isReviewed: Boolean!
+}
+
+input GeneratePrototypeSuggestionsInput {
+  businessId: String!
+  prototypeOptionId: Int!
+  description: String!
+}
+
+input SavePrototypeInput {
+  businessId: String!
+  prototypeOptionId: Int!
+  prototypeDescription: String!
+  prototypeImages: [String!]!
+}
+
+input SaveBusinessModelInput {
+  businessId: String!
+  keyPartners: String!
+  customerSegments: String!
+  valuePropositions: String!
+  channels: String!
+  customerRelationships: String!
+  revenueStreams: String!
+  keyResources: String!
+  keyActivities: String!
+  costStructure: String!
+  targetMarketSize: String!
+  goalsAndKPIs: String!
+}
+
+input CreateRevenueModelInput {
+  businessId: String!
+  currencyId: Int!
+  revenueModel: String!
+  unitSalesPercentage: Float!
+}
+
+input CreateCapexInput {
+  businessId: String!
+  capex: [CapexItemInput!]!
+}
+
+input CapexItemInput {
+  name: String!
+  cost: Float!
+}
+
+input CreateOpexInput {
+  businessId: String!
+  opexExpense: OpexExpenseInput!
+  opex: OpexInput!
+}
+
+input OpexExpenseInput {
+  y0: Float!
+  y1: Float!
+  y2: Float!
+  y3: Float!
+  y4: Float!
+  y5: Float!
+}
+
+input OpexInput {
+  M1: MonthlyOpexInput!
+  M2: MonthlyOpexInput!
+  M3: MonthlyOpexInput!
+  M4: MonthlyOpexInput!
+  M5: MonthlyOpexInput!
+  M6: MonthlyOpexInput!
+  M7: MonthlyOpexInput!
+  M8: MonthlyOpexInput!
+  M9: MonthlyOpexInput!
+  M10: MonthlyOpexInput!
+  M11: MonthlyOpexInput!
+  M12: MonthlyOpexInput!
+}
+
+input MonthlyOpexInput {
+  y1: Float!
+  y2: Float!
+  y3: Float!
+  y4: Float!
+  y5: Float!
+}
+
+input CreateFinancialPlanningInput {
+  businessId: String!
+  sales: FinancialDataInput!
+  breakeven: FinancialDataInput!
+  breakevenPoint: String!
+  financialPlanDescription: String!
+  risksAndMitigations: String!
+  futurePlans: String!
+}
+
+input FinancialDataInput {
+  M1: MonthlyDataInput!
+  M2: MonthlyDataInput!
+  M3: MonthlyDataInput!
+  M4: MonthlyDataInput!
+  M5: MonthlyDataInput!
+  M6: MonthlyDataInput!
+  M7: MonthlyDataInput!
+  M8: MonthlyDataInput!
+  M9: MonthlyDataInput!
+  M10: MonthlyDataInput!
+  M11: MonthlyDataInput!
+  M12: MonthlyDataInput!
+}
+
+input MonthlyDataInput {
+  y1: Float!
+  y2: Float!
+  y3: Float!
+  y4: Float!
+  y5: Float!
+}
+
+input GenerateBrandingInput {
+  businessId: String!
+  brandVoice: String!
+}
+
+input SaveBrandingInput {
+  businessId: String!
+  branding: SaveBrandingDataInput!
+  customerExperience: String!
+}
+
+input SaveBrandingDataInput {
+  brandVoice: String!
+  primaryColor: String!
+  secondaryColor: String!
+  tertiaryColor: String!
+  selectedFont: BrandFontInput!
+}
+
+input BrandFontInput {
+  url: String!
+  name: String!
+}
+
+input GenerateMarketPlanInput {
+  businessId: String!
+  marketing: String!
+  competitorAnalysis: String!
+}
+
+input SaveMarketPlanInput {
+  businessId: String!
+  marketing: String!
+  competitorAnalysis: String!
+  marketingFeedback: String!
+  score: Float!
+}
+
+input ExportMarketResearchQuestionnaireInput {
+  businessId: String!
+  questionnaire: [MarketResearchQuestion!]!
+}
+
+input CreateInvestmentInput {
+  businessId: String!
+  amount: String!
+  purpose: String!
+  valueEdge: InvestmentValueEdgeInput!
+  fundGoals: [InvestmentFundGoalInput!]!
+  fundPlan: [InvestmentFundPlanInput!]!
+  fundSource: InvestmentFundSourceInput!
+  nextStep: [InvestmentNextStepInput!]!
+  fundPitchStatement: InvestmentFundPitchStatementInput!
+}
+
+input InvestmentValueEdgeInput {
+  fundCase: String!
+}
+
+input InvestmentFundGoalInput {
+  goal: String!
+  cost: String!
+  outcome: String!
+}
+
+input InvestmentFundPlanInput {
+  amount: String!
+  description: String!
+  importance: String!
+}
+
+input InvestmentFundSourceInput {
+  source: String!
+}
+
+input InvestmentNextStepInput {
+  actionItem: String!
+  step: String!
+  due: String!
+}
+
+input InvestmentFundPitchStatementInput {
+  pitchStatement: String!
+}
+
+input SaveLaunchInput {
+  businessId: String!
+  launchStrategy: String!
+}
+
+input CreatePlatformUserInput {
+  name: String!
+  email: String!
+  contactNumber: String
+}
+
+input AssignPermissionsToPlatformUserInput {
+  platformUserId: String!
+  permissionIds: [Int!]!
+}
+
+input DeletePlatformUserInput {
+  platformUserId: String!
+}
+
+input UpdatePlatformUserInput {
+  platformUserId: String!
+  name: String
+  contactNumber: String
+}

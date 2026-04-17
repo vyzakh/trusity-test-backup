@@ -1,0 +1,289 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Exact Design Replica</title>
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link href='https://fonts.googleapis.com/css2?family=Headland+One&family=Inter:opsz,wght@14..32,100..900&display=swap' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/apexcharts'></script>
+    <style>
+      @page {
+        margin: 64px 24px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        font-family: 'Inter', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+      }
+
+      th,
+      td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+
+      #student-info-table thead > tr {
+        background: linear-gradient(90deg, #f59e0b, #ec6b3b, #d34f5b, #b33a7d, #8b3fae);
+      }
+
+      #student-info-table tr,
+      th,
+      td {
+        border: 1px solid #e9e9e9;
+      }
+
+      .markdown-content {
+        font-size: 12px;
+      }
+      .markdown-content * {
+        all: revert !important;
+        font-size: inherit !important;
+      }
+    </style>
+    <script src='https://cdn.jsdelivr.net/npm/apexcharts'></script>
+  </head>
+
+  <body>
+
+    {{! header }}
+    <header id='report-header' style='break-inside: avoid; margin-bottom: 32px;'>
+      <div style='display: flex; align-items: flex-end;'>
+        <div style='flex-shrink: 0; width:fit-content;'>
+          <img src='{{assetBaseUrl}}/report/trusity.svg' alt='Trusity' />
+        </div>
+        <h2 style='flex-grow: 1; text-align: center;'>School Performance Report</h2>
+        <div style='flex-shrink: 0; width:fit-content'>
+          <img src='{{assetBaseUrl}}/report/trueprenurs.svg' alt='trueprenurs.ai' />
+        </div>
+      </div>
+    </header>
+
+
+
+
+        <table id='student-info-table' style='width: 100%; border-collapse: collapse; table-layout: fixed; break-inside: avoid; margin-bottom: 32px;'>
+      <thead>
+        <tr style='color: #FFFFFF; font-weight: bold; font-size: 14px;'>
+          <th style='padding: 8px 16px; text-align: left; width: 40%'>School Name</th>
+          <th style='padding: 8px 16px; text-align: left; width: 40%'>Business Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style='font-size: 12px; font-weight: 500; color: #000000;'>
+          <td style='padding: 8px 16px; text-align: left;'>{{school.name}}</td>
+          <td style='padding: 8px 16px; text-align: left; font-size: 14px;'>{{{statusDisplay businessStatus false}}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <section style='background-color: #F8F8F8; padding:24px 16px; border-radius:16px; display: flex; flex-direction: column; gap: 32px; break-inside: avoid; margin-bottom: 32px;'>
+      <div style='width:100%; min-width:0;'>
+        <div style='display: flex; align-items: center; gap: 24px;'>
+          <div style='display: inline-flex; align-items: center; gap: 12px;'>
+            <span style='font-size: 14px; font-weight: 500; white-space: nowrap; color:#667085'>Overall School Score (OSS)</span>
+            <span style='font-size:14px; font-weight:500; color: {{fillColor overallSchoolScore}}'>{{toFixed2 overallSchoolScore}}%</span>
+          </div>
+        </div>
+      </div>
+      <div style='border: 1px solid #EAECF0; border-radius: 12px; overflow: hidden;'>
+        <table style='width: 100%; border-collapse: collapse; table-layout: fixed;'>
+          <tbody style='background: #FFFFFF; font-size: 14px; font-weight: 500;'>
+            <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:12px; font-weight: 500; text-align: left; border:none'>Total Number of Unique Business Ideas</td>
+              <td style='padding:12px; padding-right:22px; font-weight: 400; text-align: right; border:none; color: #101828'>{{toFixed2 uniqueBusinessCount}}</td>
+            </tr>
+            <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:12px; font-weight: 500; text-align: left; border:none'>Total Number of Grades</td>
+              <td style='padding:12px; padding-right:22px; font-weight: 400; text-align: right; border:none; color: #101828'>{{toFixed2 schoolStats.totalGrades}}</td>
+            </tr>
+
+              <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:12px; font-weight: 500; text-align: left; border:none'>Total Number of Students</td>
+              <td style='padding:12px; padding-right:22px; font-weight: 400; text-align: right; border:none; color: #101828'>{{toFixed2 schoolStats.totalStudents}}</td>
+            </tr>
+            {{! no border }}
+            <tr>
+              <td style='padding:12px; font-weight: 500; text-align: left; border:none'>Total Number of Classes</td>
+              <td style='padding:12px; padding-right:22px; font-weight: 400; text-align: right; border:none; color: #101828'>{{toFixed2 schoolStats.totalSections}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+
+    <section style='background-color: #F8F8F8; padding:24px 16px; border-radius:16px; display: flex; flex-direction: column; gap: 32px; break-inside: avoid; margin-bottom: 32px;'>
+      <div style='width:100%; min-width:0;'>
+        <div style='display: flex; align-items: center; gap: 24px;'>
+          <div style='display: inline-flex; align-items: center; gap: 12px;'>
+            <span style='font-size: 17px; white-space: nowrap; color:#E03C3C; font-weight: 500'>Best Idea</span>
+          </div>
+        </div>
+      </div>
+      <div style='border: 1px solid #EAECF0; border-radius: 12px; overflow: hidden;'>
+        <table style='width: 100%; border-collapse: collapse; table-layout: fixed;'>
+          <thead style='background: #FCFCFD; color: #667085; font-weight: 500; font-size: 12px;'>
+            <tr style='border-bottom: 1px solid #EAECF0;'>
+              <th style='padding: 10px 8px; text-align: center; border:none; width:14%'>Student Name</th>
+              <th style='padding: 10px 4px; text-align: center; border:none; width:30%'>Business Idea</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>Grade</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>Class</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>I</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>E</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>C</th>
+              <th style='padding: 10px 4px; text-align: center; border:none'>Average</th>
+            </tr>
+          </thead>
+<tbody style="background: #FFFFFF; font-size: 14px; font-weight: 500;">
+  {{#if topPerformedBusinesses.length}}
+    {{#each topPerformedBusinesses}}
+      <tr style="border-bottom: 1px solid #EAECF0;">
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color:#101828">
+          {{default student.name}}
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color:#101828">
+          {{default businessName}}
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color:#101828">
+          {{default student.gradeName}}
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color:#101828">
+          {{default student.sectionName}}
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color: {{fillColor averageScores.avgIScore}}">
+          {{toFixed2 averageScores.avgIScore}}%
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color: {{fillColor averageScores.avgEScore}}">
+          {{toFixed2 averageScores.avgEScore}}%
+        </td>
+        <td style="padding:8px; font-weight:400; text-align:center; border:none; font-size:14px; color: {{fillColor averageScores.avgCScore}}">
+          {{toFixed2 averageScores.avgCScore}}%
+        </td>
+        <td style="padding:8px; font-weight:600; text-align:center; border:none; font-size:14px; color: {{fillColor averageScores.averageScore}}">
+          {{toFixed2 averageScores.averageScore}}%
+        </td>
+      </tr>
+    {{/each}}
+  {{else}}
+    <tr>
+      <td colspan="8" style="padding:60px; width:100%; font-weight:400; text-align:center; border:none; font-size:14px; color:#667085;">
+        No Student Found
+      </td>
+    </tr>
+  {{/if}}
+</tbody>
+
+        </table>
+      </div>
+    </section>
+
+    {{! <div class="page-break"></div> }}
+
+    <section style='background-color: #F8F8F8; padding:24px 16px; border-radius:16px; display: flex; flex-direction: column; gap: 32px; break-inside: avoid; margin-bottom: 32px;'>
+      <div style='border: 1px solid #EAECF0; border-radius: 20px; overflow: hidden;'>
+        <table style='width: 100%; border-collapse: collapse; table-layout: fixed;'>
+          <tbody style='background: #FFFFFF; font-size: 14px; font-weight: 500;'>
+            <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:18px; font-weight: 400; text-align: left; font-size:16px; border:none; width:80%'>Overall School Innovation Score (OSIC)</td>
+              <td style='padding:18px; font-weight: 600; text-align: right; border:none; font-size:22px; color: {{fillColor overallSchoolPhaseScores.innovation}};'>{{toFixed2 overallSchoolPhaseScores.innovation}}%</td>
+            </tr>
+            <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:18px; font-weight: 400; text-align: left; font-size:16px; border:none; width:80%'>Overall School Entrepreneurship Score (OSEC)</td>
+              <td style='padding:18px; font-weight: 600; text-align: right; border:none; font-size:22px; color: {{fillColor overallSchoolPhaseScores.entrepreneurship}}'>{{toFixed2 overallSchoolPhaseScores.entrepreneurship}}%</td>
+            </tr>
+
+              <tr style='border-bottom: 1px solid #EAECF0;'>
+              <td style='padding:18px; font-weight: 400; text-align: left; font-size:16px; border:none; width:80%'>Overall School Communication Score (OSCC)</td>
+              <td style='padding:18px; font-weight: 600; text-align: right; border:none; font-size:22px; color: {{fillColor overallSchoolPhaseScores.communication}}'>{{toFixed2 overallSchoolPhaseScores.communication}}%</td>
+            </tr>
+            {{! no border }}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {{! <div class="page-break"></div> }}
+
+
+    <section style='background: #fcfcfd; border-radius: 18px; padding: 18px 12px;'>
+      <div style='display: flex; flex-direction: column; gap: 6px; padding:4px;'>
+        <div style='display: flex; align-items: center; gap: 8px'>
+          <svg width='22' height='21' viewBox='0 0 22 21' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path
+              d='M10.75 1.54278V2.93535M15.8231 0.75V2.93535M5.67686 0.75V2.93535M10.75 17.2743V18.6669M15.8231 17.2743V19.4597M5.67686 17.2743V19.4597M19.9025 10.1048H18.4139M20.75 5.359H18.4139M3.08606 10.1048H1.59746M3.08606 14.8507H0.75M3.08606 5.359H0.75M11.8961 13.0274L9.57119 7.26434C9.52301 7.15477 9.35708 7.15493 9.30915 7.26457L6.96292 13.0274M7.69462 11.5922H11.1762M14.5371 9.62263V13.0274M18.2919 10.8868V5.42786C18.2919 4.11433 17.1536 3.04951 15.7495 3.04951H5.75047C4.34636 3.04951 3.20809 4.11433 3.20809 5.42786V14.7818C3.20809 16.0953 4.34636 17.1601 5.75047 17.1601H15.7495C17.129 17.1601 18.2519 16.1323 18.2908 14.8506H20.75'
+              stroke='url(#paint0_linear_7210_2835)'
+              stroke-width='1.5'
+              stroke-miterlimit='10'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+            />
+            <defs>
+              <linearGradient id='paint0_linear_7210_2835' x1='-0.0974576' y1='10.1048' x2='21.5975' y2='10.1048' gradientUnits='userSpaceOnUse'>
+                <stop stop-color='#00F2FE' />
+                <stop offset='0.0208' stop-color='#03EFFE' />
+                <stop offset='0.2931' stop-color='#24D2FE' />
+                <stop offset='0.5538' stop-color='#3CBDFE' />
+                <stop offset='0.7956' stop-color='#4AB0FE' />
+                <stop offset='1' stop-color='#4FACFE' />
+              </linearGradient>
+            </defs>
+          </svg>
+          <p style='margin: 0; font-size: 14px; font-weight: 600; color: #101828'>School - Overall Feedback</p>
+        </div>
+        <div class='markdown-content' style='color:#797979;'>
+          {{#if feedback.feedback}}
+            <div>
+                {{{parseMd feedback.feedback}}}
+            </div>
+          {{else}}
+            <p>No data available</p>
+          {{/if}}
+        </div>
+      </div>
+    </section>
+
+    <section style='display: flex; align-items: center; gap: 12px; break-inside: avoid; margin-bottom: 32px;'>
+      <div style='flex-shrink: 0; display: flex; flex-direction: column; gap: 6px;'>
+        <p style='font-size: 12px; color: #667085; font-weight: 500;'>Overall Score</p>
+        <p style='font-size: 22px; font-weight: 700; color: {{fillColor overallSchoolScore}}'>{{toFixed2 overallSchoolScore}}%</p>
+      </div>
+      <div id='performanceChart' style='flex:1; width: 100%; height: 300px;'></div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () { const options = { chart: { zoom: { enabled: false }, toolbar: { show: false }, height: 300, animations: { enabled:
+      false }, type: 'area', fontFamily: 'Headland One, serif' }, series: [ { name: 'Score', data: [
+    {{toFixed2 schoolPerformanceProgression.problemStatement}},
+      {{toFixed2 schoolPerformanceProgression.marketResearch}},
+      {{toFixed2 schoolPerformanceProgression.marketFit}},
+      {{toFixed2 schoolPerformanceProgression.prototype}},
+      {{toFixed2 schoolPerformanceProgression.businessModel}},
+      {{toFixed2 schoolPerformanceProgression.financialPlanning}},
+      {{toFixed2 schoolPerformanceProgression.marketing}},
+      {{toFixed2 schoolPerformanceProgression.pitchFeedback}}
+      ] } ], title: {text:"Overall School Performance", offsetX:8, style: { fontSize: '18px', fontFamily:"Inter, sans-serif", fontStyle: "normal", color: '#101828', fontWeight: 500 } },
+      dataLabels: { enabled: true, formatter: val => val + '%' }, xaxis: { categories: ['I1', 'I2', 'I3', 'I4', 'E1', 'E2', 'E3', 'C1'], tickPlacement: 'between', axisBorder: {
+      show: true, color: '#e0e0e0' }, axisTicks: { show: true, color: '#e0e0e0' }, labels: { style: { fontFamily: 'Headland One, serif' } }, tooltip: { enabled: false } }, yaxis: {
+      min: 0, max: 100, tickAmount: 5, labels: { formatter: val => val.toFixed(0) } }, grid: { show: true, borderColor: '#a1a1a1ff', strokeDashArray: 3, xaxis: { lines: { show:
+      true } }, yaxis: { lines: { show: true } } }, stroke: { width: 2, colors: ['#F59E3D'], curve: 'straight' }, tooltip: { style: { fontFamily: 'Headland One, serif' } },
+      annotations: { yaxis: [ { y: 90, borderColor: '#FF0000', strokeDashArray: 3 } ] }, markers: { size: 5, colors: ['#F59E3D'], hover: { size: 8 }, strokeColors: ['#7086FD20'],
+      strokeWidth: 15 }, fill: { type: 'gradient', colors: ['#F59E3D'], gradient: { shadeIntensity: 0, opacityFrom: 0.5, opacityTo: 0.1, stops: [0, 100] } } }; const chart = new
+      ApexCharts( document.querySelector("#performanceChart"), options ); chart.render().then(() => { window.__CHART_READY__ = true; }); });
+    </script>
+
+  </body>
+</html>

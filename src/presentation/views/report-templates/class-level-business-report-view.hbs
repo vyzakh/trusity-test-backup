@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Export PDF</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <!-- Important for PDF rendering -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      /* ---------- PAGE SETUP ---------- */
+      @page {
+        size: A4;
+        margin: 30px;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 210mm;
+        height: 297mm;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #000;
+        box-sizing: border-box;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ---------- PAGE CONTAINER ---------- */
+      .page {
+        width: 100%;
+        min-height: 257mm;
+        /* A4 height minus margins */
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+      }
+
+      /* ---------- HEADER ---------- */
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12mm;
+      }
+
+      .header h1 {
+        font-size: 18px;
+        margin: 0;
+      }
+
+      .header p {
+        font-size: 12px;
+        margin: 4px 0 0 0;
+      }
+
+      /* ---------- CONTENT ---------- */
+      .content {
+        flex: 1;
+      }
+
+      .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 4mm;
+        font-size: 13px;
+        table-layout: fixed;
+      }
+
+      .header-table thead {
+        background: linear-gradient(90deg, #f48a32 0%, #8b2b7f 100%);
+      }
+
+      .header-table thead th {
+        color: #fff;
+        font-weight: 700;
+        text-align: left;
+        padding: 12px 14px;
+        border-right: 1px solid rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.1px;
+      }
+
+      .header-table thead th:last-child {
+        border-right: none;
+      }
+
+      .header-table tbody td {
+        background: #ffffff;
+        padding: 12px 14px;
+        border: 1px solid #e5e7eb;
+        border-top: none;
+        font-size: 13px;
+        font-weight: bold;
+        color: #111827;
+      }
+
+      .header-table tbody tr td + td {
+        border-left: 1px solid #e5e7eb;
+      }
+
+      .header-table tbody tr:last-child td {
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      /* Prevent row breaking across pages */
+      tr {
+        page-break-inside: avoid;
+      }
+
+      .score {
+        color: var(--bar-color);
+      }
+
+      /* ---------- GRADE CARD SECTION (INNER CONTAINER) ---------- */
+      .container {
+        margin-top: 8mm;
+        background-color: #F8F8F8;
+        padding: 6mm;
+        page-break-inside: avoid;
+      }
+
+      .inner-container {
+        background-color: #ffffff;
+        border-radius: 14px;
+        padding: 6mm;
+        box-shadow: 0 0 0 1px #f2f2f2;
+        page-break-inside: avoid;
+      }
+
+      /* ---------- STUDENT TABLE STYLING ---------- */
+      .student-table {
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 16px;
+        page-break-inside: avoid;
+      }
+
+      .student-table thead th {
+        color: #667085;
+        font-weight: 600;
+        background: none;
+        padding: 12px 8px;
+        font-size: 12px;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
+        page-break-inside: avoid;
+      }
+
+      .student-table tbody td {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 12px;
+        font-weight: 500;
+        color: #222;
+        padding: 12px 8px;
+        vertical-align: middle;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+
+      .student-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .student-table tbody td:first-child {
+        text-align: left;
+      }
+
+      .student-table td.status {
+        white-space: nowrap;
+      }
+
+      .student-table td .inprogress {
+        color: #f59e1a;
+        font-weight: 500;
+      }
+
+      .student-table td .completed {
+        color: #10b981;
+        font-weight: 500;
+      }
+
+      /* ---------- SCORE TABLE STYLING (DIV-BASED) ---------- */
+      .score-table {
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        page-break-inside: avoid;
+      }
+
+      .score-table-header,
+      .score-table-row {
+        display: flex;
+        width: 100%;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .score-table-row:last-child {
+        border-bottom: none;
+      }
+
+      .score-table-cell {
+        flex: 1;
+        padding: 10px 14px;
+        font-size: 12px;
+        font-weight: normal;
+        color: #000;
+      }
+
+      .score-table-header .score-table-cell:last-child {
+        text-align: right;
+        padding-right: 50px;
+      }
+
+      .score-table-row .score-table-cell.score-value {
+        text-align: right;
+        padding-right: 50px;
+      }
+
+      .ogs-row {
+        font-size: 11px;
+        color: #6b7280;
+        margin-bottom: 4mm;
+      }
+
+      .ogs-row span.value {
+        margin-left: 2mm;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      /* ---------- FEEDBACK SECTION ---------- */
+
+      .feedback-header {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+        margin-bottom: 3mm;
+        page-break-inside: avoid;
+      }
+
+      .feedback-header h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .feedback-icon {
+        width: 8mm;
+        height: 8mm;
+        border-radius: 10px;
+        background: #e8f4ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5mm;
+      }
+
+      .feedback-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .feedback-body p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.65;
+        color: #6b7280;
+        page-break-inside: avoid;
+      }
+
+      /* ---------- CHART SECTION ---------- */
+
+      .chart-container {
+        margin-top: 8mm;
+        background-color: #FCFCFD;
+        padding: 6mm;
+        page-break-inside: avoid;
+      }
+
+      .chart-card {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 20px;
+        align-items: center;
+        page-break-inside: avoid;
+      }
+
+      .chart-left {
+        text-align: center;
+      }
+
+      .chart-left-label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 2mm;
+      }
+
+      .chart-left-value {
+        font-size: 28px;
+        font-weight: 500;
+        color: #0f172a;
+        line-height: 1.1;
+      }
+
+      .chart-right-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #0f172a;
+        margin-bottom: 1mm;
+      }
+
+      #performanceChart {
+        width: 100%;
+        page-break-inside: avoid;
+      }
+
+      /* ---------- FOOTER LINE ---------- */
+      .footer {
+        margin-top: 10mm;
+        page-break-inside: avoid;
+      }
+
+      /* ---------- FOOTER ---------- */
+      .footer h3 {
+        font-size: 10px;
+        position: relative;
+      }
+
+      .footer h3::after {
+        content: '';
+        height: 3px;
+        background: linear-gradient(90deg, #f28c29 0%, #8a2c7f 100%);
+        border-radius: 999px;
+        position: absolute;
+        right: 0;
+        width: 80%;
+        top: 50%;
+        translate: 0 -50%;
+      }
+
+      /* ---------- PAGE BREAK ---------- */
+      .page-break {
+        page-break-before: always;
+      }
+
+      .date {
+        color: black;
+        text-align: right;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px;
+        letter-spacing: 0;
+        color: #000000;
+      }
+
+      .score-green {
+        color: #3fa98b;
+      }
+      .score-yellow {
+        color: #fabe17;
+      }
+      .score-orange {
+        color: #f25d4b;
+      }
+      .score-red {
+        color: #dc2956;
+      }
+      .score-gray {
+        color: gray;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- HEADER -->
+      <p class="date">{{date}}</p>
+      <div class="header">
+        <img src="{{assetBaseUrl}}/report/trusity.svg" alt="Trusity" />
+        <h1>Class Performance Report</h1>
+        <img src="{{assetBaseUrl}}/report/trueprenurs.svg" alt="trueprenurs.ai" />
+      </div>
+
+      <!-- CONTENT -->
+      <div class="content">
+        <table class="header-table">
+          <thead>
+            <tr>
+              <th>School Name</th>
+              <th>Grade</th>
+              <th>Class</th>
+              <th>Business Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{schoolName}}</td>
+              <td>{{gradeName}}</td>
+              <td>{{sectionName}}</td>
+              <td>
+                {{#if (eq businessStatus 'in_progress')}}
+                  In-progress
+                {{else if (eq businessStatus 'completed')}}
+                  Completed
+                {{else}}
+                  In-progress / Completed
+                {{/if}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Grade card section -->
+        <div class="container">
+          <div class="ogs-row">
+            Overall Class Score (OCS)
+            <span class="value score-color" data-value="{{overallScore}}">{{toFixed2 overallScore}}%</span>
+          </div>
+
+          <div class="score-table">
+            <div class="score-table-header">
+              <div class="score-table-cell">Score Category</div>
+              <div class="score-table-cell">Score</div>
+            </div>
+            <div class="score-table-row">
+              <div class="score-table-cell">Overall Innovation Score (CIS)</div>
+              <div class="score-table-cell score-value score" data-score="90">{{toFixed2 cis}}%</div>
+            </div>
+            <div class="score-table-row">
+              <div class="score-table-cell">Overall Entrepreneurship Score (CES)</div>
+              <div class="score-table-cell score-value score">{{toFixed2 ces}}%</div>
+            </div>
+            <div class="score-table-row">
+              <div class="score-table-cell">Overall Communication Score (CCS)</div>
+              <div class="score-table-cell score-value score">{{toFixed2 ccs}}%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Top Score</th>
+                <th>Business Idea Name</th>
+                <th>No. of completed ideas</th>
+                <th>I</th>
+                <th>E</th>
+                <th>C</th>
+                <th>ATS</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each studentReports}}
+              <tr>
+                <td>{{default studentName}}</td>
+                <td class="score" data-score="87">{{toFixed2 topScore}}%</td>
+                <td>{{default businessName}}</td>
+                <td>{{default completedIdeasCount}}</td>
+                <td>{{toFixed2 avgInnovationScore}}%</td>
+                <td>{{toFixed2 avgEntrepreneurshipScore}}%</td>
+                <td>{{toFixed2 avgCommunicationScore}}%</td>
+                <td>{{toFixed2 ats.totalAvgScore}}%</td>
+                <td class="status">
+                  {{#if (eq businessStatus 'in_progress')}}
+                   <span class="inprogres">In-progress</span>
+                  {{else if (eq businessStatus 'completed')}}
+                    <span class="completed">Completed</span>
+                  {{else}}
+                    <p><span class="inprogres">In-progress</span> / <span class="completed">Completed</span></p>
+                  {{/if}}
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="container">
+          <div class="inner-container feedback-card">
+            <div class="feedback-header">
+              <div class="feedback-icon">
+                <img src="{{assetBaseUrl}}/report/ai.svg" alt="ai" />
+              </div>
+              <h3>Class Overall Feedback</h3>
+            </div>
+            <div class="feedback-body">
+              <p>{{feedback}}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- graph section -->
+        <div class="chart-container">
+          <div class="chart-card">
+            <div class="chart-left">
+              <div class="chart-left-label">Overall Score</div>
+              <div class="chart-left-value">{{toFixed2 overallScore}}%</div>
+            </div>
+            <div class="chart-right">
+              <div class="chart-right-title">Overall Class Performance</div>
+              <div id="performanceChart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FOOTER -->
+
+    </div>
+
+    <script>
+      (function () {
+        const scores = document.querySelectorAll('.score-color');
+
+        scores.forEach((el) => {
+          const value = Number(el.dataset.value);
+
+          const color = value === 0 ? 'score-gray' : value < 40 ? 'score-red' : value < 60 ? 'score-orange' : value < 80 ? 'score-yellow' : 'score-green';
+
+          el.classList.add(color);
+        });
+      })();
+    </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const options = {
+      chart: {
+        zoom: {
+          enabled: false
+        },
+        toolbar: {
+          show: false
+        },
+        height: 250,
+        animations: {
+          enabled: false
+        },
+        type: 'area',
+        fontFamily: 'Headland One, serif'
+      },
+      series: [
+        {
+          name: 'Score',
+          data: [
+            {{toFixed2 performanceProgression.problemStatement}},
+            {{toFixed2 performanceProgression.marketResearch}},
+            {{toFixed2 performanceProgression.marketFit}},
+            {{toFixed2 performanceProgression.prototype}},
+            {{toFixed2 performanceProgression.businessModel}},
+            {{toFixed2 performanceProgression.financialPlanning}},
+            {{toFixed2 performanceProgression.marketing}},
+            {{toFixed2 performanceProgression.pitchFeedback}}
+          ]
+        }
+      ],
+      title: {
+        style: {
+          fontSize: '18px',
+          color: '#101828',
+          fontWeight: 500
+        }
+      },
+dataLabels: { 
+            enabled: true, 
+              formatter: val => val + '%'
+ },
+      xaxis: {
+        categories: ['I1', 'I2', 'I3', 'I4', 'E1', 'E2', 'E3', 'C1'],
+        tickPlacement: 'between',
+        axisBorder: {
+          show: true,
+          color: '#e0e0e0'
+        },
+        axisTicks: {
+          show: true,
+          color: '#e0e0e0'
+        },
+        labels: {
+          style: {
+            fontFamily: 'Headland One, serif'
+          }
+        },
+        tooltip: {
+          enabled: false
+        }
+      },
+      yaxis: {
+        min: 0,
+        max: 100,
+        tickAmount: 5,
+        labels: {
+          formatter: val => val.toFixed(0)
+        }
+      },
+      grid: {
+        show: true,
+        borderColor: '#a1a1a1ff',
+        strokeDashArray: 3,
+        xaxis: {
+          lines: {
+            show: true
+          }
+        },
+        yaxis: {
+          lines: {
+            show: true
+          }
+        }
+      },
+      stroke: {
+        width: 2,
+        colors: ['#F59E3D'],
+        curve: 'straight'
+      },
+      tooltip: {
+        style: {
+          fontFamily: 'Headland One, serif'
+        }
+      },
+      annotations: {
+        yaxis: [
+          {
+            y: 90,
+            borderColor: '#FF0000',
+            strokeDashArray: 3
+          }
+        ]
+      },
+      markers: {
+        size: 5,
+        colors: ['#F59E3D'],
+        hover: {
+          size: 8
+        },
+        strokeColors: ['#7086FD20'],
+        strokeWidth: 15
+      },
+      fill: {
+        type: 'gradient',
+        colors: ['#F59E3D'],
+        gradient: {
+          shadeIntensity: 0,
+          opacityFrom: 0.5,
+          opacityTo: 0.1,
+          stops: [0, 100]
+        }
+      }
+    };
+
+    const chart = new ApexCharts(
+      document.querySelector("#performanceChart"),
+      options
+    );
+
+    chart.render().then(() => {
+      window.__CHART_READY__ = true;
+    });
+  });
+</script>
+
+  </body>
+</html>

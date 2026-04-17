@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>New Challenge Assigned</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #f7f7f7;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #007BFF;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #999999;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <p>Hi {{studentName}},</p>
+
+    <p>Exciting news! You have been assigned a new challenge called <strong>“{{challengeName}}”</strong> by
+      <strong>{{assignedBy}}</strong> on TruPreneurs.AI 🎉</p>
+
+    <p>Log in now to explore the challenge and share your ideas 💡</p>
+
+    {{!-- <a href="{{ChallengeLink}}" class="button">View Challenge</a> --}}
+
+    <p class="footer">
+      Best Regards,<br>
+      TruPreneurs.AI
+    </p>
+  </div>
+</body>
+
+</html>

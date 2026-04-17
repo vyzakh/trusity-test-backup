@@ -1,0 +1,738 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Export PDF</title>
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link href='https://fonts.googleapis.com/css2?family=Headland+One&family=Inter:opsz,wght@14..32,100..900&display=swap' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/apexcharts'></script>
+
+    <!-- Important for PDF rendering -->
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+
+    <style>
+      /* ---------- PAGE SETUP ---------- */
+      @page {
+        size: A4;
+        margin: 64px 24px;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 210mm;
+        height: 297mm;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #000;
+        box-sizing: border-box;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ---------- PAGE CONTAINER ---------- */
+      .page {
+        width: 100%;
+        min-height: 257mm;
+        /* A4 height minus margins */
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+      }
+
+      /* ---------- HEADER ---------- */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 32px;
+      }
+
+      .header h1 {
+        text-align: center;
+        flex-grow: 1;
+        margin: 0;
+      }
+
+      /* ---------- CONTENT ---------- */
+      .content {
+        flex: 1;
+      }
+
+      .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border: 1px solid #E9E9E9;
+      }
+
+      .header-table thead {
+        background: linear-gradient(90deg, #f59e0b, #ec6b3b, #d34f5b, #b33a7d, #8b3fae);
+      }
+
+      .header-table thead th {
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: left;
+        padding: 8px 16px;
+        border-right: 1px solid #E9E9E9;
+        letter-spacing: 0.1px;
+      }
+
+      .header-table tbody td {
+        background: #ffffff;
+        padding: 8px 16px;
+        border-top: none;
+        font-size: 14px;
+        font-weight: 500;
+        color: #111827;
+      }
+
+      .header-table tbody tr td + td {
+        border-left: 1px solid #E9E9E9;
+      }
+
+      .header-table tbody tr:last-child td {
+        border-bottom: 1px solid #E9E9E9;
+      }
+
+      /* Prevent row breaking across pages */
+      tr {
+        break-inside: avoid;
+      }
+
+      /* ---------- GRADE CARD SECTION (INNER CONTAINER) ---------- */
+      .container {
+        margin-top: 8mm;
+        background-color: #f8f8f8;
+        border-radius: 12px;
+        padding: 6mm;
+      }
+
+      .report-container {
+        margin-top: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        break-inside: auto;
+      }
+
+      .inner-container {
+        background-color: #ffffff;
+        border-radius: 14px;
+        padding: 6mm;
+        box-shadow: 0 0 0 1px #f2f2f2;
+        width: 100%;
+      }
+
+      .ogs-row {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 2mm;
+        display: flex;
+        align-items: center;
+      }
+
+      .ogs-row span.value {
+        margin-left: 2mm;
+        font-weight: 500;
+        color: var(--bar-color);
+        font-size: 23px;
+      }
+
+      .grade-header-row {
+        display: flex;
+        align-items: center;
+        gap: 6mm;
+        margin-bottom: 6mm;
+      }
+
+      .grade-pill {
+        min-width: 28mm;
+        padding: 2.5mm 5mm;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #111827;
+        text-align: center;
+      }
+
+      .report-container .inner-container:nth-child(odd) .grade-pill {
+        background-color: #8F05B11A;
+        border: 1px solid #EEBBFB;
+      }
+
+      .report-container .inner-container:nth-child(even) .grade-pill {
+        background-color: #2057E329;
+        border: 1px solid #AEC7FF;
+      }
+
+      .overall-class-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #667085;
+      }
+
+      .overall-class-text .value {
+        margin-left: 2mm;
+        font-weight: 500;
+        color: var(--bar-color);
+        font-size: 18px;
+      }
+
+      .best-idea-row {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+        margin-bottom: 6mm;
+        margin-top: 2mm;
+      }
+
+      .best-idea-icon {
+        width: 7mm;
+        height: 7mm;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .report-container .inner-container:nth-child(odd) .best-idea-icon {
+        background-color: #F4E6F89E;
+        color: #890CAD;
+      }
+
+      .report-container .inner-container:nth-child(even) .best-idea-icon {
+        background-color: #E9EFFD;
+        color: #4574E2;
+      }
+
+      .best-idea-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      .idea-card {
+        margin-top: 4mm;
+        border-radius: 12px;
+        border: 1px solid #F5F5F5;
+        background-color: #FCFCFC;
+        overflow: hidden;
+      }
+
+      .idea-card-inner {
+        display: grid;
+        grid-template-columns: 38mm auto;
+        min-height: 26mm;
+      }
+
+      .idea-left {
+        padding: 6mm 5mm;
+        background-color: #FCFCFC;
+        border-right: 1px solid #F5F5F5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .idea-left-label {
+        font-size: 11px;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 2mm;
+        margin-bottom: 2mm;
+      }
+
+      .idea-left-label .trophy {
+        font-size: 12px;
+      }
+
+      .idea-left-score {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--bar-color);
+      }
+
+      .idea-right-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        font-size: 12px;
+      }
+
+      .idea-right-table thead th {
+        text-align: left;
+        padding: 4mm 5mm 2mm;
+        color: #6b7280;
+        font-weight: 600;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .idea-right-table tbody td {
+        padding: 3mm 5mm;
+        border-top: 1px solid #f3f4f6;
+        word-break: break-word;
+      }
+
+      .idea-right-table tbody tr:first-child td {
+        border-top: none;
+      }
+
+      .status-pill {
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .status-pill.in_progress {
+        color: #ea7a22;
+      }
+
+      .status-pill.completed {
+        color: #10b981;
+      }
+
+      .score-bars-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8mm;
+        margin-top: 8mm;
+      }
+
+      .score-bar-item {
+        font-size: 11px;
+      }
+
+      .score-bar-label {
+        margin-bottom: 2mm;
+        color: #111827;
+      }
+
+      .score-bar-track {
+        width: 100%;
+        height: 5mm;
+        border-radius: 999px;
+        background-color: #ffe4ea;
+        position: relative;
+        overflow: hidden;
+        font-size: 9pt;
+        font-weight: 600;
+      }
+
+      /* progress fill */
+      .score-bar-track::before {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: var(--value, 0%);
+        background-color: var(--bar-color);
+        border-radius: inherit;
+      }
+
+      /* percentage text */
+      .score-bar-track::after {
+        content: attr(data-value);
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        left: 2mm;
+        color: #ffffff;
+        z-index: 1;
+        white-space: nowrap;
+      }
+
+      /* ---------- FEEDBACK SECTION ---------- */
+
+      .feedback-header {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+        margin-bottom: 3mm;
+      }
+
+      .feedback-header h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .feedback-icon {
+        width: 8mm;
+        height: 8mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5mm;
+      }
+
+      .feedback-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .feedback-body p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.65;
+        color: #6b7280;
+      }
+
+      /* ---------- CHART SECTION ---------- */
+
+      .chart-container{
+        margin-top: 8mm;
+        background-color: #FCFCFD;
+        border-radius: 12px;
+        padding: 6mm;
+        break-inside: avoid;
+      }
+
+      .chart-card {
+        display: grid;
+        grid-template-columns: 0.25fr 1.75fr;
+        gap: 20px;
+        align-items: center;
+        break-inside: avoid;
+      }
+
+      .chart-left {
+        text-align: center;
+      }
+
+      .chart-left-label {
+        font-size: 14px;
+        font-weight: 400;
+        color: #6b7280;
+        margin-bottom: 2mm;
+      }
+
+      .chart-left-value {
+        font-size: 30px;
+        font-weight: 500;
+        color: #0f172a;
+        line-height: 1.1;
+      }
+
+      .chart-right-title {
+        font-size: 18px;
+        font-weight: 500;
+        color: #0f172a;
+        margin-bottom: 2mm;
+      }
+
+      #performanceChart {
+        width: 100%;
+        height: 174px;
+        break-inside: avoid;
+      }
+
+      /* ---------- PAGE BREAK ---------- */
+      .inner-container{
+        break-inside: avoid;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class='page'>
+      <!-- HEADER -->
+      <div class='header'>
+        <img src='{{assetBaseUrl}}/report/trusity.svg' alt='Trusity' />
+        <h1>Grade level Report</h1>
+        <img src='{{assetBaseUrl}}/report/trueprenurs.svg' alt='trueprenurs.ai' />
+      </div>
+
+      <!-- CONTENT -->
+      <div class='content'>
+        <table class='header-table'>
+          <thead>
+            <tr>
+              <th>School Name</th>
+              <th>Business Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{schoolName}}</td>
+              <td>{{businessesStatus}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Grade card section -->
+        <div class='container'>
+          <div class='ogs-row'>
+           {{ogs.label}}
+            <span class='value' data-score='{{ogs.value}}'>{{ogs.value}}%</span>
+          </div>
+          <div class="report-container">
+            {{#each reports}}
+              <div class='inner-container'>
+                <div class='grade-header-row'>
+                  <div class='grade-pill'>Grade {{gradeName}}</div>
+                  <div class='overall-class-text'>
+                    {{overallScore.label}}
+                    <span class='value' data-score='{{overallScore.value}}'>{{overallScore.value}}%</span>
+                  </div>
+                </div>
+
+                <div class='best-idea-row'>
+                  <div class='best-idea-icon'>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                    >
+                      <path
+                        d="M2.38313 0L1.68597 0.696173L2.72329 1.73301L3.41947 1.03683L2.38313 0ZM11.4814 0L10.4441 1.03683L11.1407 1.73301L12.1776 0.696668L11.4814 0ZM6.93202 0.30897C6.76862 0.310291 6.60358 0.320854 6.43688 0.340659H6.42202C4.41372 0.570902 2.81539 2.19349 2.53761 4.19288C2.31579 5.8021 2.97928 7.26129 4.08494 8.20108C4.53715 8.58711 4.84305 9.11676 4.95144 9.70136V12.6722H6.08037C6.25268 12.9678 6.5671 13.1674 6.93202 13.1674C7.29694 13.1674 7.61136 12.9678 7.78367 12.6722H8.9126V10.6917H8.95914V10.1034C8.95914 9.37754 9.33644 8.64572 9.94943 8.07679C10.7694 7.25585 11.3883 6.08978 11.3883 4.75041C11.3883 2.3044 9.37506 0.286193 6.93202 0.30897ZM6.93202 1.29926C8.84575 1.27252 10.398 2.83916 10.398 4.75041C10.398 5.78725 9.91774 6.70029 9.25276 7.36478L9.26861 7.38062C8.60804 7.9902 8.18079 8.8111 8.06045 9.70186H5.89469C5.78576 8.85318 5.42183 8.03174 4.73408 7.44251C3.85916 6.6998 3.33777 5.58077 3.51206 4.31716C3.72844 2.75746 4.99403 1.50326 6.54482 1.33144C6.67286 1.31369 6.8018 1.30311 6.93103 1.29975L6.93202 1.29926ZM0 4.75041V5.7407H1.48543V4.75041H0ZM12.3786 4.75041V5.7407H13.864V4.75041H12.3786ZM2.72329 8.75811L1.68646 9.79445L2.38313 10.4911L3.41897 9.45429L2.72329 8.75811ZM11.1407 8.75811L10.4446 9.45429L11.4809 10.4911L12.1776 9.79445L11.1407 8.75811ZM5.94173 10.6921H7.92231V11.6824H5.94173V10.6921Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                  <div class='best-idea-text'>Best Idea</div>
+                </div>
+
+                <div class='idea-card'>
+                  <div class='idea-card-inner'>
+                    <div class='idea-left'>
+                      <div class='idea-left-label'>
+                        <span class='trophy'><img src="{{../assetBaseUrl}}/report/trophy.svg" alt=""></span>
+                        <span>{{averageScore.label}}</span>
+                      </div>
+                      <div class='idea-left-score value' data-score='{{averageScore.value}}'>{{averageScore.value}}%</div>
+                    </div>
+
+                    <table class='idea-right-table'>
+                      <thead>
+                        <tr>
+                          <th>Business Idea</th>
+                          <th>Student Name</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {{#each topBusinesses}}
+                          <tr>
+                            <td>{{businessIdea}}</td>
+                            <td>{{businessCreatedBy}}</td>
+                            <td>
+                              <span class='status-pill {{businessStatus}}'>{{formatStatus businessStatus}}</span>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class='score-bars-row'>
+                  <div class='score-bar-item'>
+                    <div class='score-bar-label'>{{cis.label}}</div>
+                    <div class='score-bar-track' style='--value: {{cis.value}}%' data-score='{{cis.value}}' data-value='{{cis.value}}%'></div>
+                  </div>
+
+                  <div class='score-bar-item'>
+                    <div class='score-bar-label'>
+                      {{ces.label}}
+                    </div>
+                    <div class='score-bar-track' style='--value: {{ces.value}}%' data-score='{{ces.value}}' data-value='{{ces.value}}%'></div>
+                  </div>
+
+                  <div class='score-bar-item'>
+                    <div class='score-bar-label'>
+                      {{ccs.label}}
+                    </div>
+                    <div class='score-bar-track' style='--value: {{ccs.value}}%' data-score='{{ccs.value}}' data-value='{{ccs.value}}%'></div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class='container'>
+          <div class='inner-container'>
+            <div class='feedback-header'>
+              <div class='feedback-icon'>
+                <img src='{{assetBaseUrl}}/report/ai.svg' alt='ai' />
+              </div>
+              <h3>{{feedbackLabel}}</h3>
+            </div>
+            <div class='feedback-body'>
+              <p>
+                {{feedback}}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- graph section -->
+        <div class='chart-container'>
+          <div class='chart-card'>
+            <div class='chart-left'>
+              <div class='chart-left-label'>Overall Score</div>
+              <div class='chart-left-value'>{{ogs.value}}%</div>
+            </div>
+            <div class='chart-right'>
+              <div class='chart-right-title'>{{graph.label}}</div>
+              <div id='performanceChart'></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FOOTER -->
+    </div>
+
+    <script>
+      document.querySelectorAll(".score-bar-track, .value").forEach((bar) => {
+        const score = Number(bar.dataset.score || 0);
+
+        let color;
+        if (score < 40) color = "#dc2955"; // red 
+        else if (score < 60) color = "#f25d4b"; // orange
+        else if (score < 80) color = "#fabe17"; // yellow
+        else color = "#3fa98b"; // green
+        bar.style.setProperty("--bar-color", color);
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const options = {
+          chart: {
+            zoom: { enabled: false },
+            toolbar: { show: false },
+            height: 250,
+            animations: {
+              enabled: false,
+            },
+            type: "area",
+            fontFamily: "Headland One, serif",
+          },
+          series: [
+            {
+              name: "Score",
+              data: [
+              {{graph.performanceProgression.problemStatement}}, 
+              {{graph.performanceProgression.marketResearch}}, 
+              {{graph.performanceProgression.marketFit}}, 
+              {{graph.performanceProgression.prototype}}, 
+              {{graph.performanceProgression.businessModel}}, 
+              {{graph.performanceProgression.financialPlanning}}, 
+              {{graph.performanceProgression.marketing}}, 
+              {{graph.performanceProgression.pitchFeedback}}
+              ],
+            },
+          ],
+          dataLabels: { 
+            enabled: true, 
+            formatter: function (val) {
+              return `${val}%`;
+            }, },
+          xaxis: {
+            categories: ["I1", "I2", "I3", "I4", "E1", "E2", "E3", "C1"],
+            tickPlacement: "between",
+            axisBorder: {
+              show: true,
+              color: "#e0e0e0",
+            },
+            axisTicks: {
+              show: true,
+              color: "#e0e0e0",
+            },
+            labels: {
+              style: {
+                fontFamily: "Headland One, serif",
+              },
+            },
+            tooltip: {
+              enabled: true,
+            },
+          },
+          yaxis: {
+            min: 0,
+            max: 100,
+            tickAmount: 5,
+            labels: {
+              formatter: val => val.toFixed(0)
+            },
+          },
+          grid: {
+            show: true,
+            borderColor: "#a1a1a1ff",
+            strokeDashArray: 3,
+            xaxis: {
+              lines: { show: true },
+            },
+            yaxis: {
+              lines: { show: true },
+            },
+          },
+          stroke: {
+            width: 2,
+            colors: ["#F59E3D"],
+            curve: "straight",
+          },
+          tooltip: {
+            style: {
+              fontFamily: "Headland One, serif",
+            },
+          },
+          annotations: {
+            yaxis: [
+              {
+                y: 90,
+                borderColor: "#FF0000",
+                strokeDashArray: 3
+              },
+            ],
+          },
+          markers: {
+            size: 5,
+            colors: ["#F59E3D"],
+            hover: {
+              size: 8,
+            },
+            strokeColors: ["#7086FD20"],
+            strokeWidth: 15,
+          },
+          fill: {
+            type: "gradient",
+            colors: ["#F59E3D"],
+            gradient: {
+              shadeIntensity: 0,
+              opacityFrom: 0.5,
+              opacityTo: 0.1,
+              stops: [0, 100],
+            },
+          },
+        };
+
+        const chart = new ApexCharts(
+          document.querySelector("#performanceChart"),
+          options
+        );
+
+        chart.render().then(() => {
+          window.__CHART_READY__ = true;
+        });
+      });
+    </script>
+  </body>
+</html>

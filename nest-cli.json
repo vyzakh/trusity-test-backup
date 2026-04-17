@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "generateOptions": {
+    "spec": false
+  },
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true
+  },
+  "projects": {
+    "trusity": {
+      "type": "library",
+      "root": "libs/trusity",
+      "entryFile": "index",
+      "sourceRoot": "libs/trusity/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/trusity/tsconfig.lib.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>Business Phase Unlock Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333333;
+        background-color: #f7f7f7;
+        padding: 20px;
+      }
+      .container {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <p>Hi {{studentName}},</p>
+
+      <p>
+        We're pleased to inform you that the
+        {{phaseName}}
+        phase in your TruPreneurs.AI journey has been unlocked.
+      </p>
+      <p>You can now access this phase for your businesses and take the next step towards shaping your business idea. </p>
+
+      <p>Best Regards,<br />TruPreneurs.AI</p>
+    </div>
+
+    <div class='footer'>
+      &copy;
+      {{year}}
+      TruPreneurs.AI. All rights reserved.
+    </div>
+  </body>
+</html>

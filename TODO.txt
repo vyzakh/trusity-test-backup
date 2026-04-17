@@ -1,0 +1,33 @@
+Validation outside of Db operation
+Seprate args and input type
+email notification error handler
+
+
+ if (!business) {
+      throw new NotFoundException('The requested business could not be found. Please verify the business ID and try again.');
+    }
+
+    if (!response.success) {
+      throw new BadRequestException('The request could not be completed successfully. Please try again later or contact support if the issue continues.');
+    }
+
+    switch (user.scope) {
+      case UserScope.PLATFORM_USER: {
+        break;
+      }
+      default: {
+        throw new ForbiddenException('You are not allowed to perform this action.');
+      }
+    }
+
+===== Pitch Deck template PPTX Generation =====
+
+Download template from S3.
+
+Use Automizer to create a new slide & replace placeholders with data.
+
+Save the generated PPTX locally.
+
+Upload the PPTX back to S3.
+
+Return a public URL to access the generated file.
